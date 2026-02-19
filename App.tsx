@@ -11,12 +11,13 @@ import {
   Sparkles, 
   Loader2,
   AlertCircle,
-  ExternalLink
+  ExternalLink,
+  Github,
+  Cloud
 } from 'lucide-react';
 import { GeneratedImage, AppMode, MODELS, AspectRatio, ImageSize } from './types';
 import { generateImage, editImage, fileToBase64 } from './services/geminiService';
 
-// Fix: Use the globally provided AIStudio type to prevent conflicting property declarations on Window.
 declare global {
   interface Window {
     aistudio: AIStudio;
@@ -33,11 +34,9 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Edit specific state
   const [sourceImage, setSourceImage] = useState<string | null>(null);
   const [sourceMimeType, setSourceMimeType] = useState<string>('image/png');
 
-  // Load history from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('vision-studio-history');
     if (saved) {
@@ -49,7 +48,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Save history
   useEffect(() => {
     localStorage.setItem('vision-studio-history', JSON.stringify(history));
   }, [history]);
@@ -81,7 +79,6 @@ const App: React.FC = () => {
       setHistory(prev => [newImage, ...prev]);
     } catch (err: any) {
       if (err.message?.includes("Requested entity was not found")) {
-        // Reset key selection if entity not found error occurs
         await window.aistudio.openSelectKey();
       } else {
         setError(err.message || "Failed to generate image.");
@@ -139,8 +136,8 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
-      {/* Sidebar - History */}
-      <aside className="w-full md:w-80 glass border-r border-white/10 flex flex-col h-[40vh] md:h-screen">
+      {/* Sidebar - History & Deployment Info */}
+      <aside className="w-full md:w-80 glass border-r border-white/10 flex flex-col h-auto md:h-screen">
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-blue-400" />
@@ -150,16 +147,16 @@ const App: React.FC = () => {
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
           <div className="flex items-center gap-2 mb-4 text-slate-400 px-2">
             <History className="w-4 h-4" />
             <span className="text-sm font-medium">Recent Works</span>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-4 mb-8">
             {history.length === 0 ? (
               <div className="text-center py-10 text-slate-500 text-sm">
-                No history yet. Start creating!
+                No history yet.
               </div>
             ) : (
               history.map(img => (
@@ -186,12 +183,43 @@ const App: React.FC = () => {
               ))
             )}
           </div>
+
+          {/* Deployment Guide Section */}
+          <div className="mt-auto p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl space-y-3">
+            <h3 className="text-xs font-bold text-blue-400 uppercase tracking-widest flex items-center gap-2">
+              <Cloud className="w-3 h-3" />
+              Deployment Ready
+            </h3>
+            <p className="text-[10px] text-slate-400 leading-relaxed">
+              Puoi caricare questa cartella su GitHub e Vercel. I file di configurazione sono già inclusi.
+            </p>
+            <div className="flex flex-col gap-2">
+              <a 
+                href="https://vercel.com/new" 
+                target="_blank" 
+                className="flex items-center justify-between px-3 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-[10px] font-medium transition-colors border border-white/5"
+              >
+                <span>Deploy su Vercel</span>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+              <a 
+                href="https://github.com/new" 
+                target="_blank" 
+                className="flex items-center justify-between px-3 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-[10px] font-medium transition-colors border border-white/5"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Github className="w-2.5 h-2.5" />
+                  <span>Push su GitHub</span>
+                </div>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            </div>
+          </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto flex flex-col">
-        {/* Navigation Tabs */}
         <nav className="sticky top-0 z-10 glass border-b border-white/10 px-6 py-4 flex flex-wrap gap-6 items-center justify-between">
           <div className="flex gap-1 p-1 bg-black/30 rounded-lg">
             <button 
@@ -242,7 +270,6 @@ const App: React.FC = () => {
           )}
 
           <div className="space-y-8">
-            {/* Input Section */}
             <div className="glass rounded-2xl p-6 md:p-8 space-y-6">
               {mode === AppMode.EDIT && (
                 <div className="space-y-3">
@@ -285,7 +312,7 @@ const App: React.FC = () => {
                 <textarea 
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  placeholder={mode === AppMode.GENERATE ? "e.g. A futuristic cyberpunk city in neon rain, hyper-detailed, 8k..." : "e.g. Add a red sports car in the background, change lighting to sunset..."}
+                  placeholder={mode === AppMode.GENERATE ? "e.g. A futuristic cyberpunk city in neon rain..." : "e.g. Add a red sports car in the background..."}
                   className="w-full h-32 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none placeholder:text-slate-600"
                 />
               </div>
@@ -355,7 +382,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Display Most Recent Result */}
             {history.length > 0 && !loading && (
                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
                   <div className="flex items-center justify-between">
@@ -382,7 +408,6 @@ const App: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Display Grounding Links as required by search grounding rules */}
                   {history[0].groundingChunks && history[0].groundingChunks.length > 0 && (
                     <div className="mt-4 p-4 glass rounded-xl border border-white/5 space-y-3">
                       <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
@@ -407,7 +432,6 @@ const App: React.FC = () => {
                </div>
             )}
 
-            {/* Empty State */}
             {history.length === 0 && !loading && (
               <div className="py-20 flex flex-col items-center text-center space-y-4">
                 <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mb-4">
@@ -417,15 +441,9 @@ const App: React.FC = () => {
                 <p className="text-slate-500 max-w-md mx-auto">
                   Describe the image you want to see, or upload one to make changes with natural language.
                 </p>
-                <div className="flex gap-3 text-xs text-slate-600 mt-8">
-                  <span className="px-3 py-1 bg-white/5 rounded-full border border-white/5">Cyberpunk</span>
-                  <span className="px-3 py-1 bg-white/5 rounded-full border border-white/5">Vibrant Oil Painting</span>
-                  <span className="px-3 py-1 bg-white/5 rounded-full border border-white/5">4K Cinematic</span>
-                </div>
               </div>
             )}
 
-            {/* Loading Placeholder */}
             {loading && (
               <div className="glass rounded-3xl overflow-hidden aspect-video flex flex-col items-center justify-center space-y-6 animate-pulse border-blue-500/20">
                 <div className="relative">
@@ -441,9 +459,8 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Footer info */}
         <footer className="mt-auto p-8 border-t border-white/5 text-center text-slate-600 text-xs">
-          <p>Powered by Google Gemini 2.5 & 3.0 • Built with React & Tailwind</p>
+          <p>Powered by Google Gemini • Built for Deployment on GitHub & Vercel</p>
         </footer>
       </main>
     </div>

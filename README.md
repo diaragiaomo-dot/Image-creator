@@ -1,20 +1,32 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# 🎨 Gemini Vision Studio
 
-This contains everything you need to run your app locally.
+Una potente applicazione per la generazione e modifica di immagini basata sui modelli più avanzati di Google Gemini.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1_p8ZDfhtqodTOmz9vxefUyGH9fnOLhQl
+## 🚀 Come caricarlo su GitHub e Vercel
 
-## Run Locally
+### 1. Caricamento su GitHub
+1. Crea un nuovo repository su [GitHub](https://github.com/new).
+2. Apri il terminale nella cartella del progetto:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/TUO_UTENTE/NOME_REPO.git
+   git push -u origin main
+   ```
 
-**Prerequisites:**  Node.js
+### 2. Deployment su Vercel
+1. Vai su [Vercel](https://vercel.com/new).
+2. Importa il repository GitHub appena creato.
+3. **Importante**: Nella sezione "Environment Variables", aggiungi la tua chiave API:
+   - Key: `API_KEY`
+   - Value: `LA_TUA_CHIAVE_API`
+4. Clicca su **Deploy**.
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## ✨ Caratteristiche
+- **Generazione**: Crea immagini da testo usando Gemini 2.5 Flash o Gemini 3 Pro.
+- **Editing**: Carica un'immagine e modificala con istruzioni testuali.
+- **Supporto 4K**: Risoluzioni ultra-alte con il modello Pro.
+- **Search Grounding**: Risultati aggiornati con link alle fonti web.

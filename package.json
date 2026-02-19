@@ -1,23 +1,20 @@
+
 {
   "name": "gemini-vision-studio",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "description": "Professional image generation and editing suite powered by Google Gemini API",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "npx serve .",
+    "build": "echo 'No build step required for ESM-only project' && exit 0"
   },
-  "dependencies": {
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "@google/genai": "^1.42.0",
-    "lucide-react": "^0.575.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  }
+  "keywords": [
+    "gemini",
+    "ai",
+    "image-generation",
+    "react",
+    "google-genai"
+  ],
+  "author": "",
+  "license": "MIT"
 }

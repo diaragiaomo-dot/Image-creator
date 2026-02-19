@@ -1,0 +1,12 @@
+
+{
+  "version": 2,
+  "cleanUrls": true,
+  "framework": null,
+  "installCommand": "echo 'Skipping install...'",
+  "buildCommand": "echo 'Building...'",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
